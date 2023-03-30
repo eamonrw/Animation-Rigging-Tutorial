@@ -5,6 +5,7 @@ using System.IO.Ports;
 
 public class TargetController_Windows : MonoBehaviour
 {
+    Animator _animator;
     SerialPort sp;
     float next_time; //int ii = 0;
     float serialData;
@@ -29,6 +30,8 @@ public class TargetController_Windows : MonoBehaviour
             sp.Handshake = Handshake.None;
             if (sp.IsOpen) { print("Open"); }
         }
+
+        _animator = GetComponent<Animator>();
     }
     // Update is called once per frame
     void Update()
@@ -44,14 +47,18 @@ public class TargetController_Windows : MonoBehaviour
                 // When left button is pushed
                 if (sp.ReadByte() == 1)
                 {
-                    print(sp.ReadByte());
-                    transform.Translate(Vector3.left * Time.deltaTime * 0.5f);
+                    print(sp.ReadByte() + " " + _animator.GetFloat("speed"));
+
+                    _animator.SetFloat("speed", -.12f);
+                    transform.Translate(Vector3.forward * _animator.GetFloat("speed"));
                 }
                 // When right button is pushed
                 if (sp.ReadByte() == 2)
                 {
-                    print(sp.ReadByte());
-                    transform.Translate(Vector3.right * Time.deltaTime * 0.5f);
+                    print(sp.ReadByte() + " " + _animator.GetFloat("speed"));
+
+                    _animator.SetFloat("speed", .12f);
+                    transform.Translate(Vector3.forward * _animator.GetFloat("speed"));
                 }
             }
             catch (System.Exception)
