@@ -9,6 +9,9 @@ public class TargetController_Windows : MonoBehaviour
     SerialPort sp;
     float next_time; //int ii = 0;
     float serialData;
+    public float speed = .08f;
+    public Transform cameraTransform;
+
     // Use this for initialization
     void Start()
     {
@@ -47,23 +50,27 @@ public class TargetController_Windows : MonoBehaviour
                 // When left button is pushed
                 if (sp.ReadByte() == 1)
                 {
-                    print(sp.ReadByte() + " " + _animator.GetFloat("speed"));
+                    _animator.SetInteger("speed", -1);
 
-                    _animator.SetFloat("speed", -.12f);
-                    transform.Translate(Vector3.forward * _animator.GetFloat("speed"));
+                    print(sp.ReadByte() + " backward");
+
+                    transform.Translate(Vector3.back * speed);
+                    cameraTransform.Translate(Vector3.back * speed, relativeTo: transform);
                 }
                 // When right button is pushed
-                if (sp.ReadByte() == 2)
+                else if (sp.ReadByte() == 2)
                 {
-                    print(sp.ReadByte() + " " + _animator.GetFloat("speed"));
+                    _animator.SetInteger("speed", 1);
 
-                    _animator.SetFloat("speed", .12f);
-                    transform.Translate(Vector3.forward * _animator.GetFloat("speed"));
+                    print(sp.ReadByte() + " forward");
+
+                    transform.Translate(Vector3.forward * speed);
+                    cameraTransform.Translate(Vector3.forward * speed, relativeTo: transform);
                 }
             }
             catch (System.Exception)
             {
-
+                _animator.SetInteger("speed", 0);
             }
 
         }
